@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>See You Soon - Neon Edition</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --neon-pink: #ff00ff;
+            --neon-blue: #00ffff;
+            --neon-green: #00ff00;
+            --dark-bg: #0f0f1a;
+            --grid-color: rgba(0, 255, 255, 0.2);
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--dark-bg);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .retro-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 50px 50px;
+            perspective: 500px;
+            transform-style: preserve-3d;
+            transform: rotateX(60deg);
+            z-index: 0;
+        }
+        
+        .container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+            z-index: 1;
+        }
+        
+        .neon-text {
+            font-family: 'Orbitron', sans-serif;
+            color: white;
+            text-transform: uppercase;
+            position: relative;
+            text-align: center;
+        }
+        
+        .title {
+            font-size: clamp(2.5rem, 10vw, 5rem);
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            margin-bottom: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+        
+        .title span {
+            display: inline-block;
+        }
+        
+        .pink-glow {
+            text-shadow: 0 0 5px var(--neon-pink),
+                         0 0 10px var(--neon-pink),
+                         0 0 20px var(--neon-pink);
+        }
+        
+        .blue-glow {
+            text-shadow: 0 0 5px var(--neon-blue),
+                         0 0 10px var(--neon-blue),
+                         0 0 20px var(--neon-blue);
+        }
+        
+        .green-glow {
+            text-shadow: 0 0 5px var(--neon-green),
+                         0 0 10px var(--neon-green),
+                         0 0 20px var(--neon-green);
+        }
+        
+        .countdown-box {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin: 3rem 0;
+            width: 100%;
+            max-width: 800px;
+        }
+        
+        .countdown-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+        
+        .time-block {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--neon-blue);
+            border-radius: 8px;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 10px var(--neon-blue);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .time-block::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            right: 2px;
+            height: 50%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.15), transparent);
+            border-radius: 6px 6px 0 0;
+        }
+        
+        .time-label {
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            margin-top: 1rem;
+            font-size: 1rem;
+            letter-spacing: 0.1em;
+            text-shadow: 0 0 10px var(--neon-blue);
+        }
+        
+        .subtitle {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            text-align: center;
+            line-height: 1.6;
+        }
+        
+        .notification-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            width: 100%;
+            max-width: 500px;
+            margin-top: 2rem;
+        }
+        
+        .form-group {
+            position: relative;
+        }
+        
+        .notification-form input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--neon-blue);
+            border-radius: 30px;
+            color: white;
+            font-family: 'Roboto', sans-serif;
+            font-size: 1rem;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+        
+        .notification-form input:focus {
+            outline: none;
+            box-shadow: 0 0 20px var(--neon-blue);
+        }
+        
+        .notification-form input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .neon-button {
+            cursor: pointer;
+            padding: 1rem 2rem;
+            background: transparent;
+            border: 2px solid var(--neon-pink);
+            border-radius: 30px;
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            box-shadow: 0 0 10px var(--neon-pink);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .neon-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 0, 255, 0.4), transparent);
+            transition: all 0.6s;
+        }
+        
+        .neon-button:hover {
+            background: rgba(255, 0, 255, 0.1);
+            box-shadow: 0 0 20px var(--neon-pink);
+        }
+        
+        .neon-button:hover::before {
+            left: 100%;
+        }
+        
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+        
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            background: transparent;
+            border: 2px solid var(--neon-green);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icon::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: var(--neon-green);
+            border-radius: 50%;
+            z-index: -1;
+            transform: scale(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            color: var(--dark-bg);
+            box-shadow: 0 0 15px var(--neon-green);
+        }
+        
+        .social-icon:hover::before {
+            transform: scale(1);
+        }
+        
+        .neon-lines {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        
+        .neon-line {
+            position: absolute;
+            height: 2px;
+            background: var(--neon-blue);
+            opacity: 0.7;
+            border-radius: 100%;
+            top: 50%;
+            width: 0;
+            animation: neonLine 8s linear infinite;
+        }
+        
+        .neon-circle {
+            position: absolute;
+            border-radius: 50%;
+            border: 2px solid var(--neon-pink);
+            box-shadow: 0 0 20px var(--neon-pink);
+            opacity: 0;
+            animation: neonCircle 12s linear infinite;
+        }
+        
+        .success-msg {
+            background: rgba(0, 255, 0, 0.1);
+            border: 2px solid var(--neon-green);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            text-align: center;
+            display: none;
+            box-shadow: 0 0 10px var(--neon-green);
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.8;
+            }
+        }
+        
+        @keyframes neonLine {
+            0% {
+                width: 0;
+                opacity: 0.7;
+                left: -10%;
+            }
+            50% {
+                opacity: 0.5;
+            }
+            100% {
+                width: 120%;
+                opacity: 0;
+                left: 0;
+            }
+        }
+        
+        @keyframes neonCircle {
+            0% {
+                width: 0;
+                height: 0;
+                opacity: 0.7;
+            }
+            50% {
+                opacity: 0.3;
+            }
+            100% {
+                width: 300px;
+                height: 300px;
+                opacity: 0;
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .countdown-box {
+                gap: 1rem;
+            }
+            
+            .time-block {
+                width: 80px;
+                height: 80px;
+                font-size: 2rem;
+            }
+            
+            .title {
+                font-size: 2.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .countdown-box {
+                gap: 0.9rem;
+            }
+            
+            .time-block {
+                width: 70px;
+                height: 70px;
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="retro-grid"></div>
+    <div class="neon-lines" id="neon-effects"></div>
+    
+    <div class="container">
+        <h1 class="neon-text title">
+            <span class="pink-glow">Waitng</span> 
+            <span class="blue-glow">for</span> 
+            <span class="green-glow">approval</span>
+        </h1>
+        
+        
+        <div class="countdown-box">
+            <div class="countdown-item">
+                <div class="time-block blue-glow" id="days">00</div>
+                <div class="time-label blue-glow">Days</div>
+            </div>
+            <div class="countdown-item">
+                <div class="time-block pink-glow" id="hours">00</div>
+                <div class="time-label pink-glow">Hours</div>
+            </div>
+            <div class="countdown-item">
+                <div class="time-block green-glow" id="minutes">00</div>
+                <div class="time-label green-glow">Minutes</div>
+            </div>
+            <div class="countdown-item">
+                <div class="time-block blue-glow" id="seconds">00</div>
+                <div class="time-label blue-glow">Seconds</div>
+            </div>
+        </div>
+        
+        <form class="notification-form" id="notify-form">
+            
+            <button type="submit" class="neon-button pink-glow">
+                <a href="https://irra_11.t.me/">Contact Me</a>
+            </button>
+        </form>
+    </div>
+
+    <script>
+        // Create neon effects
+        function createNeonEffects() {
+            const neonContainer = document.getElementById('neon-effects');
+            
+            // Create neon lines
+            for (let i = 0; i < 10; i++) {
+                const line = document.createElement('div');
+                line.className = 'neon-line';
+                
+                // Random position and delay
+                line.style.top = `${Math.random() * 100}%`;
+                line.style.animationDelay = `${Math.random() * 8}s`;
+                
+                neonContainer.appendChild(line);
+            }
+            
+            // Create neon circles
+            for (let i = 0; i < 5; i++) {
+                const circle = document.createElement('div');
+                circle.className = 'neon-circle';
+                
+                // Random position and delay
+                circle.style.top = `${Math.random() * 100}%`;
+                circle.style.left = `${Math.random() * 100}%`;
+                circle.style.animationDelay = `${Math.random() * 12}s`;
+                
+                neonContainer.appendChild(circle);
+            }
+        }
+        
+        // --- MODIFIED FUNCTION ---
+        // Countdown functionality
+        function startCountdown() {
+            // Changed the key to reset the timer for all previous visitors
+            const countdownKey = 'countdownTargetDate_v2'; 
+            let targetDate;
+
+            // Check if a target date is already stored in localStorage
+            const storedTargetDate = localStorage.getItem(countdownKey);
+
+            if (storedTargetDate) {
+                // If it exists, use it
+                targetDate = new Date(storedTargetDate);
+            } else {
+                // If it doesn't exist (first visit), create a new one and store it
+                targetDate = new Date();
+                // --- THIS IS THE CHANGED LINE ---
+                targetDate.setDate(targetDate.getDate() + 3); // Set to 3 days from now
+                localStorage.setItem(countdownKey, targetDate.toISOString());
+            }
+
+            function updateCountdown() {
+                const now = new Date();
+                const difference = targetDate - now;
+                
+                // Calculate time values
+                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+                
+                // Update DOM
+                document.getElementById('days').textContent = String(days).padStart(2, '0');
+                document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+                document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+                document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+                
+                // If countdown is finished
+                if (difference < 0) {
+                    clearInterval(countdownInterval);
+                    document.getElementById('days').textContent = '00';
+                    document.getElementById('hours').textContent = '00';
+                    document.getElementById('minutes').textContent = '00';
+                    document.getElementById('seconds').textContent = '00';
+                    
+                    document.querySelector('.subtitle').textContent = "We're back online! Thank you for your patience.";
+                }
+            }
+            
+            // Initial call
+            updateCountdown();
+            
+            // Update every second
+            const countdownInterval = setInterval(updateCountdown, 1000);
+        }
+        
+        // Form submission
+        function setupForm() {
+            const form = document.getElementById('notify-form');
+            const successMessage = document.getElementById('success-message');
+            
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const nameInput = document.getElementById('name-input');
+                const emailInput = document.getElementById('email-input');
+                
+                // Simple validation
+                if (nameInput.value.trim() !== '' && 
+                    emailInput.value.trim() !== '' && 
+                    emailInput.value.includes('@')) {
+                    
+                    // Show success message
+                    successMessage.style.display = 'block';
+                    
+                    // Clear form
+                    nameInput.value = '';
+                    emailInput.value = '';
+                    
+                    // Hide message after 5 seconds
+                    setTimeout(() => {
+                        successMessage.style.animation = 'fadeOut 0.5s forwards';
+                        setTimeout(() => {
+                            successMessage.style.display = 'none';
+                            successMessage.style.animation = '';
+                        }, 500);
+                    }, 5000);
+                } else {
+                    alert('Please fill in all fields correctly.');
+                }
+            });
+        }
+        
+        // Social buttons
+        function setupSocialButtons() {
+            const socialButtons = document.querySelectorAll('.social-icon');
+            
+            socialButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    alert(`Redirecting to our ${this.id} page...`);
+                });
+            });
+        }
+        
+        // Title letter animation
+        function animateTitleLetters() {
+            const titleSpans = document.querySelectorAll('.title span');
+            
+            titleSpans.forEach((span, index) => {
+                span.style.animationDelay = `${index * 0.2}s`;
+            });
+        }
+        
+        // Initialize everything when the DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            createNeonEffects();
+            startCountdown();
+            setupForm();
+            setupSocialButtons();
+            animateTitleLetters();
+        });
+    </script>
+</body>
+</html>
